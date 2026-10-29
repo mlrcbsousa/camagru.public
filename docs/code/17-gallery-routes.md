@@ -1,6 +1,6 @@
 # 17 Gallery routes
 
-The gallery handlers in [app/server.py](../../app/server.py): `_gallery`, the like and comment branches of `_picture`, `_like`, `_comment`, and `_gallery_address`. The gallery walkthrough is [01-gallery.md](../01-gallery.md). The cards are drawn in [18-gallery-page.md](18-gallery-page.md), the query that orders the rows is [19-gallery-query.md](19-gallery-query.md), and delete and the image address are in [11-editor-routes.md](11-editor-routes.md).
+The gallery handlers in [app/server.py](../../app/server.py): `_gallery`, the like and comment branches of `_picture`, `_like`, `_comment`, and `_gallery_address`. The gallery walkthrough is [gallery.md](../gallery.md). The cards are drawn in [18-gallery-page.md](18-gallery-page.md), the query that orders the rows is [19-gallery-query.md](19-gallery-query.md), and delete and the image address are in [11-editor-routes.md](11-editor-routes.md).
 
 ## One comment, end to end
 
@@ -199,9 +199,9 @@ def _comment(
 
 `_send` returns false when Mailpit is down. The comment is already stored by then, so the redirect becomes `/?page=2&notice=nomail` and the page says the mail was not sent.
 
-The link in the letter is `_base()` plus `/pictures/9`, which under `make up` is `http://localhost:8080/pictures/9`, the stored image. There is no address for a single comment. Printed page 7 does not require a link; the letter has one because every letter in this app does, as noted in [01-gallery.md](../01-gallery.md#notes).
+The link in the letter is `_base()` plus `/pictures/9`, which under `make up` is `http://localhost:8080/pictures/9`, the stored image. There is no address for a single comment. Printed page 7 does not require a link; the letter has one because every letter in this app does, as noted in [gallery.md](../gallery.md#notes).
 
-The author is mailed for their own comment too, because the same code runs and it never compares the commenter with the author. That reading is also in [01-gallery.md](../01-gallery.md#notes).
+The author is mailed for their own comment too, because the same code runs and it never compares the commenter with the author. That reading is also in [gallery.md](../gallery.md#notes).
 
 ## The address the redirect uses
 

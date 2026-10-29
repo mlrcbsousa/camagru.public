@@ -123,18 +123,18 @@ Accounts never call Pillow. The editor uses it to blend a PNG, because the subje
 
 The clicks, in order. Leave the browser console and `make logs` open from step 3 on; any log other than a `getUserMedia` warning is a crash, and none of these steps asks for the camera. Open the site as the host in `CAMAGRU_BASE_URL`, which locally is <http://localhost:8080>, since `127.0.0.1` is a different site.
 
-1. `git status -sb` and `git remote -v`. Pass: this checkout is the camagru repo you mean to run.
 1. `git status -sb` and `git remote -v`. Pass: this checkout is the camagru repo to run.
+2. Put `CAMAGRU_SECRET` in `.env` and leave it uncommitted. The base URL defaults to `http://localhost:8080`. Run `make up`. Pass: <http://localhost:8080> loads, <http://localhost:8025> is Mailpit, and `make logs` shows no request line.
 3. Open the browser console and leave it open. Pass: no error and no warning.
 4. Sign up as `ada`, `ada@example.com`, password `password`. Pass: the page says `Invalid password.` and lists `one digit`. Sign up is not in the navigation on this page, and the header does not say logged out.
 5. Sign up again with `Password1`. Pass: the browser stays logged out, the page says to check the mail, and a refresh does not submit the form again. Mailpit has one message, subject `Confirm your camagru account`, thanking `ada`, with one `/confirm/` link.
 6. Log in as `ada` / `Password1` before opening that link. Pass: the page says to open the confirmation link, the header stays empty, and a refresh does not send the password again.
 7. Open the confirmation link. Pass: it shows the login form and does not log the account in. Log in with `Password1`. Pass: the header shows `ada`.
-8. Log out and open `/editor`. Pass: the address is `/login`. The logged-in editor is walked in [01-editor.md](01-editor.md).
+8. Log out and open `/editor`. Pass: the address is `/login`. The logged-in editor is walked in [editor.md](editor.md).
 9. Open `/reset`. Pass: an email field and Send link, with no password field, and the sentence says the new password is chosen on the link.
 10. Send a reset for `ada@example.com`, open the `/reset/` link in Mailpit, set `Password2`, and log in with `Password2`. Pass: the header shows `ada`. Log out and try `Password1`. Pass: the page says that password does not match.
 11. This one goes past the required checks. Send another reset and leave the link unopened. Pass: `Password2` still logs in, because asking for a reset does not change the current password.
 12. While logged in, open `/profile` and change the username, the email, and the password. Pass: the page says `Profile saved.` Log out and log in with the new username and password. Pass: the header shows the new username. Save again with the password left blank. Pass: the current password still works.
-13. `make db`. Pass: the value after `|` is not the password you typed; it looks like `hex$hex`.
-14. Log out, then log in with the current username and password `blahblah' OR 1='1`. Pass: you stay logged out, and the page says that password does not match.
 13. `make db`. Pass: the value after `|` is not the password that was typed; it looks like `hex$hex`.
+14. Log out, then log in with the current username and password `blahblah' OR 1='1`. Pass: login is refused, and the page says that password does not match.
+15. Narrow the window to about 360px and walk signup, login, reset, and profile. Pass: header, main, and footer are present, nothing overlaps, and a long username is cut with an ellipsis that shows the full text on hover. The link for the current page is left out.

@@ -1,6 +1,6 @@
 # 01 Editor
 
-Walkthrough for the editor, where a member captures or uploads a photo, adds stickers, and saves the server-side composite. The accounts clicks are in [01-accounts.md](01-accounts.md#9-steps), the screen contract is [DESIGN.md](DESIGN.md), and the Pillow decision is [adr/images/0001](adr/images/0001-pillow-for-compositing.md).
+Walkthrough for the editor, where a member captures or uploads a photo, adds stickers, and saves the server-side composite. The accounts clicks are in [accounts.md](accounts.md#9-steps), the screen contract is [DESIGN.md](DESIGN.md), and the Pillow decision is [adr/images/0001](adr/images/0001-pillow-for-compositing.md).
 
 A printed page is the footer number in the subject.
 

@@ -1,6 +1,6 @@
 # 13 Editor page
 
-The browser page [public/editor.html](../../public/editor.html). `editor_page` in [app/pages.py](../../app/pages.py) fills its `{{csrf}}`, `{{message}}`, and `{{thumbs}}` markers. The server blend is [12-compose.md](12-compose.md), and the editor walkthrough is [01-editor.md](../01-editor.md).
+The browser page [public/editor.html](../../public/editor.html). `editor_page` in [app/pages.py](../../app/pages.py) fills its `{{csrf}}`, `{{message}}`, and `{{thumbs}}` markers. The server blend is [12-compose.md](12-compose.md), and the editor walkthrough is [editor.md](../editor.md).
 
 The sticker on the live camera and Save GIF are covered in [23-preview.md](23-preview.md). This page sends the photo and the sticker names, and the server draws the saved still.
 
@@ -98,4 +98,4 @@ Our code never calls `cameraReady` itself; it hands the function to `getUserMedi
 
 The camera prompt does not freeze the page, so Use sample photo can be clicked while the browser is still asking. The sample is then already on screen when the browser hands over the camera, and `cameraReady` sees that photo and hangs up, so the light stays off. `stream = media` comes before that check because `stopCamera` reads `stream`.
 
-The browser floor for the whole site is [01-accounts.md](../01-accounts.md#7-old-browsers).
+The browser floor for the whole site is [accounts.md](../accounts.md#7-old-browsers).

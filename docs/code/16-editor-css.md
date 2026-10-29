@@ -1,6 +1,6 @@
 # 16 Editor CSS
 
-The editor rules in [public/app.css](../../public/app.css). The shared header, forms, and messages are [09-css.md](09-css.md), the browser floor is [01-accounts.md](../01-accounts.md#7-old-browsers), and the editor walkthrough is [01-editor.md](../01-editor.md).
+The editor rules in [public/app.css](../../public/app.css). The shared header, forms, and messages are [09-css.md](09-css.md), the browser floor is [accounts.md](../accounts.md#7-old-browsers), and the editor walkthrough is [editor.md](../editor.md).
 
 ## The stage
 

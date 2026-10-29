@@ -1,6 +1,6 @@
 # 21 Gallery CSS
 
-This walks through the gallery rules in [public/app.css](../../public/app.css). The shared header, forms, and messages are in [09-css.md](09-css.md), the card markup is in [18-gallery-page.md](18-gallery-page.md), and the browser floor is in [01-accounts.md](../01-accounts.md#7-old-browsers).
+This walks through the gallery rules in [public/app.css](../../public/app.css). The shared header, forms, and messages are in [09-css.md](09-css.md), the card markup is in [18-gallery-page.md](18-gallery-page.md), and the browser floor is in [accounts.md](../accounts.md#7-old-browsers).
 
 ## The cards
 

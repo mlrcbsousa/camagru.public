@@ -1,6 +1,6 @@
 # 12 Compose
 
-The blend in [app/compose.py](../../app/compose.py), called by `_save_picture` in [11-editor-routes.md](11-editor-routes.md). The editor walkthrough is [01-editor.md](../01-editor.md). Why Pillow is allowed is [adr/images/0001](../adr/images/0001-pillow-for-compositing.md): printed page 8 requires the composite on the server, and printed page 5 allows a library when PHP's GD can do the same job.
+The blend in [app/compose.py](../../app/compose.py), called by `_save_picture` in [11-editor-routes.md](11-editor-routes.md). The editor walkthrough is [editor.md](../editor.md). Why Pillow is allowed is [adr/images/0001](../adr/images/0001-pillow-for-compositing.md): printed page 8 requires the composite on the server, and printed page 5 allows a library when PHP's GD can do the same job.
 
 ## A real save
 

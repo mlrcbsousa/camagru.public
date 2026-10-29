@@ -1,6 +1,6 @@
 # 14 Editor fill
 
-`editor_page` in [app/pages.py](../../app/pages.py). The other pages are walked in [07-pages.md](07-pages.md), the file it fills is [13-editor-page.md](13-editor-page.md), and the editor walkthrough is [01-editor.md](../01-editor.md).
+`editor_page` in [app/pages.py](../../app/pages.py). The other pages are walked in [07-pages.md](07-pages.md), the file it fills is [13-editor-page.md](13-editor-page.md), and the editor walkthrough is [editor.md](../editor.md).
 
 `editor.html` has three markers: `{{csrf}}`, `{{message}}`, and `{{thumbs}}`. `_fill` replaces those double braces and does not scan the result again, and a single brace is not a marker.
 

@@ -1,6 +1,6 @@
 # 01 Gallery
 
-Walkthrough for the public gallery, with likes, comments, and the comment mail. The accounts clicks are in [01-accounts.md](01-accounts.md#9-steps), the editor clicks are in [01-editor.md](01-editor.md), and the screen contract is [DESIGN.md](DESIGN.md).
+Walkthrough for the public gallery, with likes, comments, and the comment mail. The accounts clicks are in [accounts.md](accounts.md#9-steps), the editor clicks are in [editor.md](editor.md), and the screen contract is [DESIGN.md](DESIGN.md).
 
 A printed page is the footer number in the subject.
 

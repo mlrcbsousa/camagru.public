@@ -1,8 +1,8 @@
 # Product Spec: camagru
 
-## Summary
+## PRD reference
 
-A member publishes webcam or uploaded photos with frames composited on the server, and visitors browse them. Likes, comments, and account changes require login. Decisions are in [adr/README.md](adr/README.md).
+[PRD.md](PRD.md). A member publishes webcam or uploaded photos with frames composited on the server, and visitors browse them. Likes, comments, and account changes require login. Decisions are in [adr/README.md](adr/README.md).
 
 ## User Journeys
 
@@ -53,15 +53,15 @@ The bonuses sit on top of the finished mandatory part, and a bonus that is incom
 
 ## Delivery Slices
 
-| Slice | Description | Value | Acceptance Criteria | Test Evidence |
-| --- | --- | --- | --- | --- |
-| 1 Accounts | Signup, confirm, login, logout, reset, profile | Nobody else can use the account | AC-1 to AC-6 | Unit on hash, cookie, mail body. Playwright on the forms |
-| 2 Editor | Webcam, upload, 0 to many frames, server PNG, own deletes | A picture exists | AC-7 to AC-11 | Unit on composite bytes. Playwright on save and delete |
-| 3 Gallery | Public pages of 5, Next link, likes, comments, preference | People can see and respond | AC-12 to AC-16 | Unit on the page query. Playwright on paging and comment mail |
-| 4 Shell | Layout, one CSS file, `.env`, no logs, injection refused, `make up` | The defense is not stopped early | AC-17 to AC-20 | Playwright on layout and XSS. Unit on SQL placeholders |
-| 5 Bonus | In-place like, comment, and delete. Webcam preview of the edit. Scroll loads the next 5. X and Facebook links. One GIF | The five leads are real features | AC-21 to AC-25 | Unit on the GIF bytes. Playwright on the page updates, the scroll, and the share links |
+| Slice | PRD Goal / Non-goal Guard | Description | Value | Acceptance Criteria | Test Evidence |
+| --- | --- | --- | --- | --- | --- |
+| 1 Accounts | Goals 1. Non-goal: no auth package | Signup, confirm, login, logout, reset, profile | Nobody else can use the account | AC-1 to AC-6 | Unit on hash, cookie, mail body. Playwright on the forms |
+| 2 Editor | Goal 2 | Webcam, upload, 0 to many frames, server PNG, own deletes | A picture exists | AC-7 to AC-11 | Unit on composite bytes. Playwright on save and delete |
+| 3 Gallery | Goals 3 and 4 | Public pages of 5, Next link, likes, comments, preference | People can see and respond | AC-12 to AC-16 | Unit on the page query. Playwright on paging and comment mail |
+| 4 Shell | Constraints | Layout, one CSS file, `.env`, no logs, injection refused, `make up` | The defense is not stopped early | AC-17 to AC-20 | Playwright on layout and XSS. Unit on SQL placeholders |
+| 5 Bonus | Goals after the mandatory part | In-place like, comment, and delete. Webcam preview of the edit. Scroll loads the next 5. X and Facebook links. One GIF | The five leads are real features | AC-21 to AC-25 | Unit on the GIF bytes. Playwright on the page updates, the scroll, and the share links |
 
-The editor and the gallery need accounts, the shell constraints hold on every page, and the bonus builds on the four mandatory areas.
+The editor and the gallery need accounts, the shell constraints hold on every page, and the bonus builds on the four mandatory areas. The tests behind each row are listed in [TEST-STRATEGY.md](TEST-STRATEGY.md).
 
 ## Acceptance Criteria
 

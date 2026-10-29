@@ -1,6 +1,6 @@
 # 15 Pictures
 
-The picture rows in [app/store.py](../../app/store.py). The account rows are walked in [05-store.md](05-store.md), the page that calls these functions is [11-editor-routes.md](11-editor-routes.md), and the editor walkthrough is [01-editor.md](../01-editor.md).
+The picture rows in [app/store.py](../../app/store.py). The account rows are walked in [05-store.md](05-store.md), the page that calls these functions is [11-editor-routes.md](11-editor-routes.md), and the editor walkthrough is [editor.md](../editor.md).
 
 ```sql
 create table if not exists pictures (

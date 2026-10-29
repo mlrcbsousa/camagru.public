@@ -1,6 +1,6 @@
 # 11 Editor routes
 
-The editor handlers in [app/server.py](../../app/server.py): `_editor`, `_picture`, `_save_picture`, `_frame_bytes`, and `_image_bytes`. The editor walkthrough is [01-editor.md](../01-editor.md), the blend is [12-compose.md](12-compose.md), and the front door that calls these is [02-server.md](02-server.md).
+The editor handlers in [app/server.py](../../app/server.py): `_editor`, `_picture`, `_save_picture`, `_frame_bytes`, and `_image_bytes`. The editor walkthrough is [editor.md](../editor.md), the blend is [12-compose.md](12-compose.md), and the front door that calls these is [02-server.md](02-server.md).
 
 ## One save, end to end
 

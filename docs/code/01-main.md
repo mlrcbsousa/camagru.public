@@ -1,6 +1,6 @@
 # 01 main
 
-Line by line for [app/__main__.py](../../app/__main__.py). The walkthrough is in [01-accounts.md](../01-accounts.md).
+Line by line for [app/__main__.py](../../app/__main__.py). The walkthrough is in [accounts.md](../accounts.md).
 
 ## Where `app` comes from
 

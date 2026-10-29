@@ -46,7 +46,7 @@ test.afterEach(() => {
   expect(consoleLines).toEqual([]);
 });
 
-test.describe('docs/01-accounts.md section 9', () => {
+test.describe('docs/accounts.md section 9', () => {
   test('4. a lowercase password is refused with its rule', async () => {
     await accounts.openSignup();
     await accounts.signup('evalada', 'evalada@example.com', 'password');
@@ -149,7 +149,7 @@ test.describe('docs/01-accounts.md section 9', () => {
   });
 });
 
-test.describe('docs/01-editor.md section 5', () => {
+test.describe('docs/editor.md section 5', () => {
   test('1. a logged-out editor sends the visitor to login', async () => {
     await page.goto('/editor');
     await expect(page).toHaveURL(/\/login$/);
@@ -263,7 +263,7 @@ test.describe('docs/01-editor.md section 5', () => {
   });
 });
 
-test.describe('docs/01-gallery.md', () => {
+test.describe('docs/gallery.md', () => {
   test('1. a logged-out gallery has no like or comment control', async () => {
     await page.setViewportSize({ width: 1024, height: 800 });
     await accounts.logoutFromHere();
@@ -420,7 +420,7 @@ async function mailCount(request, recipient) {
   }).length;
 }
 
-test.describe('docs/01-shell.md', () => {
+test.describe('docs/shell.md', () => {
   test('1. the pages have a header, a main, and a footer at 360px', async () => {
     await page.setViewportSize({ width: 360, height: 800 });
 
@@ -470,7 +470,7 @@ test.describe('docs/01-shell.md', () => {
   });
 });
 
-test.describe('docs/01-bonus.md', () => {
+test.describe('docs/bonus.md', () => {
   test('1. like and comment stay on this document', async ({ request }) => {
     await request.post('/e2e/reset');
     await accounts.openSignup();

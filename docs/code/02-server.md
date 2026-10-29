@@ -1,6 +1,6 @@
 # 02 server
 
-Line by line for [app/server.py](../../app/server.py). The account steps live in [01-accounts.md](../01-accounts.md), and the cookie itself is built in [03-session.md](03-session.md). How the cookie answers the subject is the short section [The cookie, one sentence](#the-cookie-one-sentence) below.
+Line by line for [app/server.py](../../app/server.py). The account steps live in [accounts.md](../accounts.md), and the cookie itself is built in [03-session.md](03-session.md). How the cookie answers the subject is the short section [The cookie, one sentence](#the-cookie-one-sentence) below.
 
 ## End-to-end runner
 

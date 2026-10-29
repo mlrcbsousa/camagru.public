@@ -46,7 +46,7 @@ Sent to ada@example.com.
 
 The HTML part has the same words without the `Sent to` line, and puts the link on the words `See the picture`. `html.escape` runs on the username, the sentence, the link, the link text, and the closing line, so a commenter name cannot become a tag.
 
-Printed page 7 says the author is notified by email but does not say the mail must contain a link. This letter has one because every letter from `_letter` does, and since there is no address for a single comment, the link opens the picture. The walkthrough still checks this link, as [01-gallery.md](../01-gallery.md#notes) notes.
+Printed page 7 says the author is notified by email but does not say the mail must contain a link. This letter has one because every letter from `_letter` does, and since there is no address for a single comment, the link opens the picture. The walkthrough still checks this link, as [gallery.md](../gallery.md#notes) notes.
 
 The author is mailed for their own comment too, because `comment` never compares the commenter with the author. The same note is in that walkthrough.
 

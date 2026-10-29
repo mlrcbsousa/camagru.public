@@ -6,6 +6,8 @@ Web app for webcam or uploaded photos with a server-side overlay. Subject v4.1. 
 
 The server is Python 3.15.0 with `sqlite3`, Pillow, and `smtplib`, installed by uv. It runs as one app container next to Mailpit, and `make up` starts both. Decisions are in [docs/adr/README.md](docs/adr/README.md), the screens in [docs/DESIGN.md](docs/DESIGN.md), and the behaviour in [docs/SPEC.md](docs/SPEC.md).
 
+The route map is [docs/security.md](docs/security.md).
+
 ## AI usage
 
 An assistant helped document the modules in [docs/code](docs/code/01-main.md), explain concepts that were new in this stack, research the PHP standard-library equivalents in the table below, and write the end-to-end tests.

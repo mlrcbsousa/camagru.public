@@ -62,7 +62,7 @@ Canonical means the one official address, which is `CAMAGRU_BASE_URL`. `HTTP_HOS
 
 Open `http://127.0.0.1:8080/login` while the base URL is `http://localhost:8080`: host is `127.0.0.1:8080` and netloc is `localhost:8080`, so this returns a 303 to `http://localhost:8080/login`. The browser requests that URL, the host now matches, `_canonical` returns `None`, and login runs.
 
-The redirect matters because a cookie set on `127.0.0.1` is not sent to `localhost`, and the stylesheet cache is separate too. Without it, a mail link and the tab you already have open can disagree about whether you are logged in, and the page can show up unstyled. [Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
+The redirect matters because a cookie set on `127.0.0.1` is not sent to `localhost`, and the stylesheet cache is separate too. Without it, a mail link and an already open tab can disagree about whether the member is logged in, and the page can show up unstyled. [Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
 
 `_base` is `CAMAGRU_BASE_URL` with the trailing slash removed. The default in code is `http://127.0.0.1:8765`, the end-to-end port, while Compose uses `http://localhost:8080` when `.env` leaves it empty.
 

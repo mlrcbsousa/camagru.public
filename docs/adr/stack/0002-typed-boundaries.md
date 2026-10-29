@@ -12,7 +12,7 @@ basedpyright's `basic` mode type-checks almost nothing while function arguments 
 
 ## Decision
 
-We will type every function argument and return in `app/` and `tests/`, and the Playwright files in `e2e/` carry JSDoc types that no checker runs. A local is typed when its type is known, whether inferred or written. basedpyright runs in `strict` mode with `reportAny` as an error, and `reportExplicitAny` stays off so a bottleneck may name `Any`.
+I will type every function argument and return in `app/` and `tests/`, and the Playwright files in `e2e/` carry JSDoc types that no checker runs. A local is typed when its type is known, whether inferred or written. basedpyright runs in `strict` mode with `reportAny` as an error, and `reportExplicitAny` stays off so a bottleneck may name `Any`.
 
 The only reads of sqlite values and the WSGI environ are in `app/boundary.py`, where each read is cast to `object` and checked. A column or header of the wrong type raises `TypeError` or `ValueError`, which the request handler already turns into the short 500 page. Posted fields are a `TypedDict`: missing or non-text values become `""`, and `frames` stays a list of text. A Pillow call whose stub is still unknown may carry one `# pyright: ignore[reportUnknownMemberType]`.
 

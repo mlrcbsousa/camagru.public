@@ -11,8 +11,8 @@ The account UI is a shell and a handful of forms. The subject forbids a dependen
 
 ## Decision
 
-We will write the CSS ourselves in `public/app.css`, so v1 takes no CSS framework and no component library.
+I will write the CSS myself in `public/app.css`, so v1 takes no CSS framework and no component library.
 
 ## Consequences
 
-Every screen is our own layout, so a missing design section shows up as a plain page instead of being hidden by a framework. A v2 that vendors a CSS-only framework reopens this ADR, and a JavaScript UI framework stays out while this subject applies.
+Every screen is my own layout, so a missing design section shows up as a plain page instead of being hidden by a framework. A v2 that vendors a CSS-only framework reopens this ADR, and a JavaScript UI framework stays out while this subject applies.

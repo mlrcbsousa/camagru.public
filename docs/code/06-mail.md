@@ -40,7 +40,7 @@ def _letter(
     return {"subject": subject, "plain": plain, "html": html}
 ```
 
-`escape` is `html.escape`, so a username cannot become a tag in the HTML part, while the plain part is text and is not escaped. The confirmation link is the only way to confirm the account, and the message says to ignore it if you did not sign up.
+`escape` is `html.escape`, so a username cannot become a tag in the HTML part, while the plain part is text and is not escaped. The confirmation link is the only way to confirm the account, and the message says to ignore it when the recipient did not sign up.
 
 `reset` passes the subject "Reset your camagru password" and a body saying the link works once and that the current password keeps working until a new one is chosen.
 

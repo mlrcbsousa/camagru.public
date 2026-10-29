@@ -82,20 +82,20 @@ The form posts the text in `upload_b64`. `showStill` stops the camera, so the ca
 
 `readUpload` receives the file control because the markup says `onchange="readUpload(this)"`. Inside an inline handler `this` is the input, but inside the function it would not be, so the markup passes it in.
 
-An upload goes through `FileReader`, which turns the chosen file into the same kind of text as a snap. When the file's type starts with `image/`, that text also becomes the stage image. A file with any other type still fills `upload_b64`, and Save still posts it. Printed page 6 rules out unwanted uploads without spelling out how; our AC-10 says nothing is stored. The server checks the bytes and the page says the file is not an image, so the refusal is visible.
+An upload goes through `FileReader`, which turns the chosen file into the same kind of text as a snap. When the file's type starts with `image/`, that text also becomes the stage image. A file with any other type still fills `upload_b64`, and Save still posts it. Printed page 6 rules out unwanted uploads without spelling out how; AC-10 says nothing is stored. The server checks the bytes and the page says the file is not an image, so the refusal is visible.
 
 ## The camera
 
 `startCamera` runs as the page loads and calls `getUserMedia`, the browser function that asks for the camera. The subject does not name that function, but printed page 5 forbids console logs, and the one tolerated exception is a `getUserMedia` warning when the page is not HTTPS. That warning comes from this call. It is the browser saying the camera is blocked because the page is not a secure origin, with text along the lines of `getUserMedia` no longer working on an insecure origin and the site needing HTTPS. [Secure contexts](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts)
 
-`http://localhost` and `http://127.0.0.1` count as secure, so Chrome stays quiet there, which is why a run on `make up` shows no warning. It appears on plain HTTP to a real host name or a LAN address, such as `http://192.168.1.10:8080`. Any other console error from our code is not allowed.
+`http://localhost` and `http://127.0.0.1` count as secure, so Chrome stays quiet there, which is why a run on `make up` shows no warning. It appears on plain HTTP to a real host name or a LAN address, such as `http://192.168.1.10:8080`. Any other console error from this code is not allowed.
 
 There is no `try`, because the failure is a rejected promise, not a throw. `.then(cameraReady, function () {})` passes two functions: the browser calls the first with the stream when the camera is allowed and the second with the error when it is not. The second function is empty, so a refusal does not become an unhandled error in the console, and the prefixed `getUserMedia` fallback does the same with its error callback. After a refusal the stage keeps its empty-state sentence and Capture stays off, while upload and the sample still work.
 
 Our code never calls `cameraReady` itself; it hands the function to `getUserMedia`, and when the user allows the camera, the browser calls `cameraReady(stream)`, so the `media` parameter is that stream. `byId("camera")` is the video tag, and setting `video.srcObject` to the stream, or `video.src` on Chrome 46, connects the two. The tag then plays it because of `autoplay`.
 
-`stopCamera` walks `stream.getTracks()`. We ask for video only, so there is one track, and that track is what keeps the camera light on. Dropping the variable is not enough; the track itself has to be stopped, and the comment on that line says so.
+`stopCamera` walks `stream.getTracks()`. The call asks for video only, so there is one track, and that track is what keeps the camera light on. Dropping the variable is not enough; the track itself has to be stopped, and the comment on that line says so.
 
-The camera prompt does not freeze the page, so you can click Use sample photo while the browser is still asking. The sample is then already on screen when the browser hands over the camera, and `cameraReady` sees that photo and hangs up, so the light stays off. `stream = media` comes before that check because `stopCamera` reads `stream`.
+The camera prompt does not freeze the page, so Use sample photo can be clicked while the browser is still asking. The sample is then already on screen when the browser hands over the camera, and `cameraReady` sees that photo and hangs up, so the light stays off. `stream = media` comes before that check because `stopCamera` reads `stream`.
 
 The browser floor for the whole site is [01-accounts.md](../01-accounts.md#7-old-browsers).

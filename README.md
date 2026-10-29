@@ -8,7 +8,7 @@ The server is Python 3.15.0 with `sqlite3`, Pillow, and `smtplib`, installed by 
 
 ## AI usage
 
-Manuel set the requirements, chose the stack and each decision recorded in [docs/adr](docs/adr/README.md), and reviewed and accepted every change. An assistant drafted code from those specs, wrote the module notes in [docs/code](docs/code/01-main.md) and the end-to-end tests, and researched the PHP standard-library equivalents in the table below.
+An assistant helped document the modules in [docs/code](docs/code/01-main.md), explain concepts that were new in this stack, research the PHP standard-library equivalents in the table below, and write the end-to-end tests.
 
 ## Function mapping
 
@@ -68,9 +68,9 @@ Every function the server uses has a row here, and the PHP column names the stan
 | `wsgiref.simple_server.WSGIRequestHandler` | PHP built-in server | `QuietHandler` overrides `log_message`, so no request line reaches stderr. [WSGIRequestHandler](https://docs.python.org/3/library/wsgiref.html#wsgiref.simple_server.WSGIRequestHandler), [built-in server](https://www.php.net/manual/en/features.commandline.webserver.php) |
 | `socketserver.ThreadingMixIn` | PHP built-in server | One idle connection does not stall the site. [ThreadingMixIn](https://docs.python.org/3/library/socketserver.html#socketserver.ThreadingMixIn), [built-in server](https://www.php.net/manual/en/features.commandline.webserver.php) |
 
-This table is the only Python-to-PHP map, so do not keep a second list.
+This table is the only Python-to-PHP map, so no second copy is kept.
 
-The subject forbids a library you did not write unless PHP's standard library can do the same job. The rule does not run the other way: a function in the language you chose does not have to be rewritten just because PHP spells it differently, so `open` stays `open` because PHP has `file_get_contents`, and `hashlib` stays because PHP has `hash`. A package such as Pillow is allowed only because GD has `imagepng` and `imagegif`; without a PHP equivalent the package would be out and the work would be written in the app. Typing helpers from `typing`, `collections.abc`, and `wsgiref.types` are not a runtime library, so they are not in this table.
+The subject forbids a library I did not write unless PHP's standard library can do the same job. The rule does not run the other way: a function in the language I chose does not have to be rewritten just because PHP spells it differently, so `open` stays `open` because PHP has `file_get_contents`, and `hashlib` stays because PHP has `hash`. A package such as Pillow is allowed only because GD has `imagepng` and `imagegif`; without a PHP equivalent the package would be out and the work would be written in the app. Typing helpers from `typing`, `collections.abc`, and `wsgiref.types` are not a runtime library, so they are not in this table.
 
 ## Run
 
@@ -80,7 +80,7 @@ The subject forbids a library you did not write unless PHP's standard library ca
 
 No public host is chosen yet. When one is, these are the steps.
 
-1. Install Docker and clone this repo. Do not copy a database file into the git tree.
+1. Install Docker and clone this repo. A database file is not copied into the git tree.
 2. Write `.env`: `CAMAGRU_SECRET` is a long random string that stays out of git, and `CAMAGRU_BASE_URL` is the `https` origin users type. `DATABASE_PATH` is set in `compose.yml` to `/data/camagru.sqlite3`, so `.env` does not change it.
 3. Keep `/data` on a disk that outlives the container. `make up` already mounts the named volume `camagru-data` there, and a rebuild attaches the same volume again. To use a host directory instead, mount it on `/data` in `compose.yml`. `make fclean` deletes the named volume.
 4. For a public site, point `CAMAGRU_SMTP_HOST` and `CAMAGRU_SMTP_PORT` in `compose.yml` at a real SMTP server. Mailpit is only the mailbox for `make up`; the app itself just speaks SMTP.

@@ -90,7 +90,7 @@ function stopCamera() {
     return;
   }
 
-  // getUserMedia returns a stream of tracks. We ask for video only, so this is one track.
+  // getUserMedia returns a stream of tracks. The call asks for video only, so this is one track.
   // Stopping the track is what turns the camera light off.
   // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream/getTracks
   tracks = stream.getTracks();

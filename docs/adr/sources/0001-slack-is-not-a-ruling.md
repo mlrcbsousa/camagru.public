@@ -11,8 +11,8 @@ Accepted
 
 ## Decision
 
-We will treat a Slack message as a ruling only when the message itself says so, and we will record its date, channel, and exact line. Peer notes stay peer notes, and the subject PDF outranks them.
+I will treat a Slack message as a ruling only when the message itself says so, and I will record its date, channel, and exact line. Peer notes stay peer notes, and the subject PDF outranks them.
 
 ## Consequences
 
-The README and the defense cite the PDF, not a Slack summary. An unanswered question, including Tailwind, stays open. A later message that states a staff ruling gets its own ADR if it changes what we build.
+The README and the defense cite the PDF, not a Slack summary. An unanswered question, including Tailwind, stays open. A later message that states a staff ruling gets its own ADR if it changes what I build.

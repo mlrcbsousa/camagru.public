@@ -11,7 +11,7 @@ Printed page 9 requires one or more containers and one command. The site that `m
 
 ## Decision
 
-We will run one application container holding `wsgiref`, the Python app, Pillow, and the sqlite file, with Mailpit as a second container that is only a mailbox. `make up` runs `docker compose up --build -d`, with `DOCKER ?= docker`. HTML is files plus escaping, not a template package, and Playwright stays out of the image. Layout:
+I will run one application container holding `wsgiref`, the Python app, Pillow, and the sqlite file, with Mailpit as a second container that is only a mailbox. `make up` runs `docker compose up --build -d`, with `DOCKER ?= docker`. HTML is files plus escaping, not a template package, and Playwright stays out of the image. Layout:
 
 - `app/` for the Python modules
 - `public/` for the HTML pages and their scripts, CSS, and overlays

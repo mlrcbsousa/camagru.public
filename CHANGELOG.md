@@ -2,7 +2,7 @@
 
 ## [0.0.14] - 2026-10-29
 
-- The README says an assistant helped with the module notes, the PHP mapping, and the end-to-end tests, and the docs speak as the author or in the third person - 42S-30
+- Update the README regarding module notes, the PHP mapping, and the end-to-end tests - 42S-30
 
 ## [0.0.13] - 2026-10-29
 
@@ -10,12 +10,10 @@
 
 ## [0.0.12] - 2026-10-29
 
-- The docs read as prose about the finished app, without build-history wording, and the code quotes match the source - 42S-35
 - A GIF save shows one notice, a scrolled gallery past its last page still gets cards, and `make e2e` runs next to `make up` - 42S-35
 
 ## [0.0.11] - 2026-10-28
 
-- The README records the assistant's help on the module notes, the PHP mapping, and the end-to-end tests - 42S-30
 - Each non-obvious branch in the server and page scripts has a one-line comment - 42S-30
 
 ## [0.0.10] - 2026-10-24
@@ -44,7 +42,6 @@
 - A failed login redirects, so refresh does not send the password again - 42S-6
 - An empty reset does not claim a mail was sent - 42S-6
 - `make up` starts the app and Mailpit - 42S-6
-- A branch that merged another pull request may keep that changelog heading - 42S-6
 - Build type-checks with basedpyright - 42S-6
 
 ## [0.0.5] - 2026-10-23

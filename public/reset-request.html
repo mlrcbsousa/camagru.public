@@ -1,0 +1,9 @@
+<div class="account">
+  <h1>Reset password</h1>
+  <p class="lead">Enter the email on the account. If it exists, a link arrives. You choose the new password on that page. The current password keeps working until you do.</p>
+  <form method="post" action="{{action}}" autocomplete="off">
+    <label>Email <input data-testid="reset-email" name="email" value="{{email}}" autocomplete="email"></label>
+    <button data-testid="reset-request-submit" name="action" value="request" type="submit">Send link</button>
+  </form>
+  {{message}}
+</div>

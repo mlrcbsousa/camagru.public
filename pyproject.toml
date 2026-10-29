@@ -1,0 +1,13 @@
+[project]
+name = "camagru"
+version = "0.0.13"
+requires-python = ">=3.15"
+dependencies = ["pillow"]
+
+[tool.basedpyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.15"
+include = ["app", "tests", "e2e"]
+exclude = ["e2e/node_modules"]
+reportAny = "error"
+reportExplicitAny = "none"

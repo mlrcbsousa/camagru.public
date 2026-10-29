@@ -1,0 +1,299 @@
+<div data-testid="editor-root" class="editor">
+  <section class="editor-main">
+    <h1>Editor</h1>
+    <div class="stage" id="stage">
+      <!--
+        autoplay starts playback once a stream is attached. muted keeps that from being treated as sound.
+        playsinline is ignored by Firefox 41 and Chrome 46. A phone uses it to stay in the page.
+        hidden means there is no camera yet. The script removes it.
+        https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+      -->
+      <video id="camera" autoplay playsinline muted hidden></video>
+      <img id="preview" data-testid="editor-preview" alt="" hidden>
+      <img class="overlay" id="overlay-a" src="/frames/a.png" alt="" hidden>
+      <img class="overlay" id="overlay-b" src="/frames/b.png" alt="" hidden>
+      <p id="stage-empty" class="stage-empty">Allow the camera, upload a PNG, or use the sample photo.</p>
+    </div>
+    <!-- Hidden drawing board. One camera frame is copied here, then exported. The visitor sees the img, not this. -->
+    <canvas id="snap" hidden></canvas>
+    <form id="editor-form" method="post" action="/editor">
+      <input type="hidden" name="csrf" value="{{csrf}}">
+      <input type="hidden" id="use-sample" name="use_sample" value="">
+      <input type="hidden" id="upload-b64" name="upload_b64" value="">
+      <input type="hidden" id="gif" name="gif" value="">
+      <input type="hidden" id="snap0" name="snap0" value="">
+      <input type="hidden" id="snap1" name="snap1" value="">
+      <input type="hidden" id="snap2" name="snap2" value="">
+      <fieldset class="frames">
+        <legend>Stickers</legend>
+        <label data-testid="editor-frame-a" class="frame-pick"><input type="checkbox" name="frames" value="a" onchange="updateButtons(); markFrames()"><img src="/frames/a.png" alt="">Border</label>
+        <label data-testid="editor-frame-b" class="frame-pick"><input type="checkbox" name="frames" value="b" onchange="updateButtons(); markFrames()"><img src="/frames/b.png" alt="">Star sticker</label>
+      </fieldset>
+      <div class="actions">
+        <button data-testid="editor-capture" id="capture" type="button" onclick="captureOrRetake()" disabled>Capture</button>
+        <label class="file-pick">Upload PNG<input data-testid="editor-upload" type="file" accept="image/png" onchange="readUpload(this)"></label>
+        <button data-testid="editor-use-sample" class="secondary" type="button" onclick="useSample()">Use sample photo</button>
+        <button data-testid="editor-save" id="save" type="submit" disabled>Save</button>
+        <button data-testid="gif-save" id="gif-save" class="secondary" type="button" onclick="saveGif()">Save GIF (3 snaps)</button>
+      </div>
+      <p class="hint">Pick a sticker to turn on Capture. Save needs a captured, uploaded, or sample photo.</p>
+    </form>
+    {{message}}
+  </section>
+
+  <aside class="editor-side">
+    <h2>Your pictures</h2>
+    {{thumbs}}
+  </aside>
+</div>
+<script>
+var stream = null;
+
+function byId(id) {
+  // https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+  return document.getElementById(id);
+}
+
+function hasSticker() {
+  var boxes = document.getElementsByName("frames");
+  var index = 0;
+
+  for (; index < boxes.length; index += 1) {
+    if (boxes[index].checked) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function hasBase() {
+  return byId("upload-b64").value !== "" || byId("use-sample").value === "1";
+}
+
+function updateButtons() {
+  var capture = byId("capture");
+  // True when the frozen photo is on screen, not the live camera.
+  var still = !byId("preview").hidden;
+
+  capture.textContent = still ? "Retake" : "Capture";
+  capture.disabled = still ? false : !(stream && hasSticker());
+  byId("save").disabled = !hasBase();
+  byId("gif-save").disabled = !(!still && stream && hasSticker());
+}
+
+function stopCamera() {
+  var tracks;
+  var index = 0;
+
+  if (!stream) {
+    return;
+  }
+
+  // getUserMedia returns a stream of tracks. We ask for video only, so this is one track.
+  // Stopping the track is what turns the camera light off.
+  // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream/getTracks
+  tracks = stream.getTracks();
+
+  for (; index < tracks.length; index += 1) {
+    tracks[index].stop();
+  }
+
+  stream = null;
+  byId("camera").hidden = true;
+}
+
+function showStill(src) {
+  stopCamera();
+  byId("preview").src = src;
+  byId("preview").hidden = false;
+  byId("stage-empty").hidden = true;
+  updateButtons();
+}
+
+function clearStill() {
+  byId("preview").hidden = true;
+  byId("preview").removeAttribute("src");
+  byId("upload-b64").value = "";
+  byId("use-sample").value = "";
+  byId("stage-empty").hidden = false;
+  updateButtons();
+}
+
+function captureOrRetake() {
+  var video = byId("camera");
+  var url;
+
+  // Retake. A snap is already showing, so clear it and open the camera again.
+  if (!byId("preview").hidden) {
+    clearStill();
+    startCamera();
+    return;
+  }
+
+  // Capture. Copy one camera frame into the hidden canvas and show that picture.
+  if (!stream || !hasSticker()) {
+    return;
+  }
+
+  url = pngDataUrl(video);
+  byId("upload-b64").value = url.slice(url.indexOf(",") + 1);
+  byId("use-sample").value = "";
+  showStill(url);
+}
+
+// `input` is the file control. The inline onchange passes it as `this`.
+// Inside this function, `this` is not that control.
+function readUpload(input) {
+  var reader = new FileReader();
+  var file = input.files && input.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  reader.onload = function () {
+    var text = String(reader.result || "");
+    var comma = text.indexOf(",");
+
+    byId("upload-b64").value = comma === -1 ? text : text.slice(comma + 1);
+    byId("use-sample").value = "";
+
+    // A non-image still posts. The server refuses it and the page says why.
+    if (file.type.indexOf("image/") === 0) {
+      showStill(text);
+      return;
+    }
+
+    updateButtons();
+  };
+  // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+  reader.readAsDataURL(file);
+}
+
+function useSample() {
+  byId("use-sample").value = "1";
+  byId("upload-b64").value = "";
+  showStill("/base.png");
+}
+
+function cameraReady(media) {
+  var video = byId("camera");
+
+  // One assignment. stopCamera reads it and hangs up when a photo is already showing.
+  stream = media;
+
+  // A photo was loaded while the browser was asking for the camera.
+  if (!byId("preview").hidden) {
+    stopCamera();
+    return;
+  }
+
+  if ("srcObject" in video) {
+    video.srcObject = media;
+  } else {
+    // Chrome 46 has no srcObject. Firefox 41 does.
+    // https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
+    video.src = window.URL.createObjectURL(media);
+  }
+
+  video.hidden = false;
+  byId("stage-empty").hidden = true;
+  updateButtons();
+}
+
+function startCamera() {
+  var legacy = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    // The second function is the catch. Empty, so a refusal adds no console error.
+    navigator.mediaDevices.getUserMedia({ video: true }).then(cameraReady, function () {});
+    return;
+  }
+
+  // Chrome 46 only has the prefixed callback form.
+  if (legacy) {
+    legacy.call(navigator, { video: true }, cameraReady, function () {});
+  }
+}
+
+function markFrames() {
+  var boxes = document.getElementsByName("frames");
+  var count = 0;
+  var index = 0;
+
+  for (; index < boxes.length; index += 1) {
+    byId("overlay-" + boxes[index].value).hidden = !boxes[index].checked;
+
+    if (boxes[index].checked) {
+      count += 1;
+    }
+  }
+
+  byId("preview").setAttribute("data-frame", String(count));
+}
+
+function snapSource() {
+  // The live camera when it runs, else the loaded still.
+  if (stream && !byId("camera").hidden) {
+    return byId("camera");
+  }
+
+  if (!byId("preview").hidden) {
+    return byId("preview");
+  }
+
+  return null;
+}
+
+function pngDataUrl(source) {
+  var canvas = byId("snap");
+
+  canvas.width = source.videoWidth || source.naturalWidth || 640;
+  canvas.height = source.videoHeight || source.naturalHeight || 480;
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+  canvas.getContext("2d").drawImage(source, 0, 0, canvas.width, canvas.height);
+  // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+  return canvas.toDataURL("image/png");
+}
+
+function snapOnce(source) {
+  var url = pngDataUrl(source);
+
+  return url.slice(url.indexOf(",") + 1);
+}
+
+function saveGif() {
+  var camera = byId("camera");
+  var taken = 0;
+
+  if (camera.hidden || !stream || !hasSticker()) {
+    byId("stage-empty").textContent = "Open the camera and tick a sticker before saving a GIF.";
+    return;
+  }
+
+  byId("gif-save").disabled = true;
+  byId("gif-save").textContent = "Snapping...";
+
+  function next() {
+    byId("snap" + taken).value = snapOnce(camera);
+    taken += 1;
+
+    if (taken < 3) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout
+      setTimeout(next, 1000);
+      return;
+    }
+
+    byId("gif").value = "1";
+    byId("editor-form").submit();
+  }
+
+  next();
+}
+
+updateButtons();
+markFrames();
+startCamera();
+</script>

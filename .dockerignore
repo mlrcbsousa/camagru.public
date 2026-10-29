@@ -1,0 +1,7 @@
+e2e
+tests
+.venv
+data
+.git
+playwright-report
+test-results

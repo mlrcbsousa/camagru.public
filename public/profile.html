@@ -1,0 +1,13 @@
+<div class="account">
+  <h1>Profile</h1>
+  <p class="lead">Change your username, email, password, or comment mail. Leave the password blank to keep the current one.</p>
+  <form method="post" action="/profile" autocomplete="off">
+    <input type="hidden" name="csrf" value="{{csrf}}">
+    <label>Username <input data-testid="profile-username" name="username" value="{{username}}" autocomplete="username"></label>
+    <label>Email <input data-testid="profile-email" name="email" value="{{email}}" autocomplete="email"></label>
+    <label>Password <input data-testid="profile-password" name="password" type="password" autocomplete="new-password"></label>
+    <label class="check"><input data-testid="profile-mail-preference" type="checkbox" name="mail_ok" value="1" {{mail_checked}}> Comment mail</label>
+    <button data-testid="profile-submit" type="submit">Save</button>
+  </form>
+  {{message}}
+</div>

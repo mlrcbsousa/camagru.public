@@ -1,0 +1,10 @@
+<div class="account">
+  <h1>Choose a new password</h1>
+  <p class="lead">This link works once. Then log in with the new password.</p>
+  <form method="post" action="{{action}}" autocomplete="off">
+    {{token}}
+    <label>New password <input data-testid="reset-password" name="password" type="password" autocomplete="new-password"></label>
+    <button data-testid="reset-submit" name="action" value="choose" type="submit">Set password</button>
+  </form>
+  {{message}}
+</div>

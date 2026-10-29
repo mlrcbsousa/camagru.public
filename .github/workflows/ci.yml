@@ -1,0 +1,71 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  release-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --no-tags origin "${{ github.base_ref }}"
+            export RELEASE_BASE="origin/${{ github.base_ref }}"
+          fi
+          make release-version
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # https://docs.astral.sh/uv/getting-started/installation/
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - run: make lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # https://docs.astral.sh/uv/getting-started/installation/
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - run: make test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # https://docs.astral.sh/uv/getting-started/installation/
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - run: make build
+
+  e2e:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # https://docs.astral.sh/uv/getting-started/installation/
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      # https://github.com/actions/setup-node
+      # https://nodejs.org/docs/latest-v24.x/api/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: make e2e
+
+  deploy-production:
+    if: github.event_name == 'workflow_dispatch'
+    needs: [release-version, lint, test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make deploy-production

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>camagru</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header data-testid="shell-header">
+    <nav>{{nav}}</nav>
+    <p data-testid="session-status" title="{{session}}">{{session}}</p>
+    {{logout}}
+  </header>
+  <main data-testid="shell-main">
+    {{main}}
+  </main>
+  <footer data-testid="shell-footer">camagru</footer>
+  <p data-testid="server-log"></p>
+<script>
+function ajaxAction(action) {
+  // AJAX: the page updates from the reply and does not load a new document.
+  // https://developer.mozilla.org/en-US/docs/Glossary/AJAX
+  return action.indexOf("/like") !== -1 || action.indexOf("/comment") !== -1 || action.indexOf("/delete") !== -1;
+}
+
+function encodeForm(form) {
+  var parts = [];
+  var index = 0;
+
+  for (; index < form.elements.length; index += 1) {
+    var field = form.elements[index];
+
+    if (!field.name) {
+      continue;
+    }
+
+    // An off checkbox or radio is not a submitted field.
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/checked
+    if ((field.type === "checkbox" || field.type === "radio") && !field.checked) {
+      continue;
+    }
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+    parts.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value));
+  }
+
+  return parts.join("&");
+}
+
+function closestParent(node, className) {
+  while (node && !(node.classList && node.classList.contains(className))) {
+    node = node.parentNode;
+  }
+
+  return node;
+}
+
+function showNotice(text) {
+  // https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
+  var note = document.querySelector("[data-testid='comment-mail-status']");
+  var gallery = document.querySelector(".gallery");
+
+  if (!text) {
+    return;
+  }
+
+  if (!note) {
+    note = document.createElement("p");
+    note.setAttribute("data-testid", "comment-mail-status");
+    gallery.parentNode.insertBefore(note, gallery);
+  }
+
+  note.textContent = text;
+}
+
+function applyAjaxResult(form, action, data) {
+  var card = closestParent(form, "card");
+  var item;
+
+  // Like: the reply carries the new count.
+  if (action.indexOf("/like") !== -1 && card) {
+    var total = card.querySelector(".like-total");
+    var count = Number(data.likes);
+
+    total.querySelector("[data-testid='gallery-like-count']").textContent = String(count);
+    total.lastChild.textContent = count === 1 ? " like" : " likes";
+  }
+
+  // Comment: append it as text and drop "No comments yet."
+  if (action.indexOf("/comment") !== -1 && card && data.ok) {
+    item = document.createElement("li");
+    item.setAttribute("data-testid", "gallery-comment");
+    item.appendChild(document.createTextNode(": " + data.body));
+    var name = document.createElement("b");
+
+    // textContent inserts characters. It does not parse tags.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
+    name.textContent = data.username;
+    item.insertBefore(name, item.firstChild);
+    var empty = card.querySelector(".no-comments");
+
+    if (empty) {
+      empty.parentNode.removeChild(empty);
+    }
+
+    card.querySelector(".comments").appendChild(item);
+    form.querySelector("[name='body']").value = "";
+    showNotice(data.notice);
+  }
+
+  // Delete in the editor: remove that thumbnail.
+  if (action.indexOf("/delete") !== -1 && data.ok) {
+    item = closestParent(form, "thumb");
+
+    if (item) {
+      item.parentNode.removeChild(item);
+    }
+  }
+}
+
+function ajaxSubmit(event) {
+  event.preventDefault();
+  // https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
+  var form = event.target;
+  var action = form.getAttribute("action");
+  var xhr = new XMLHttpRequest();
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+  xhr.open("POST", action);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.onload = function () {
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
+    applyAjaxResult(form, action, JSON.parse(xhr.responseText));
+  };
+  xhr.send(encodeForm(form) + "&xhr=1");
+}
+
+function bindAjax() {
+  var forms = document.getElementsByTagName("form");
+  var index = 0;
+
+  for (; index < forms.length; index += 1) {
+    var action = forms[index].getAttribute("action") || "";
+
+    if (ajaxAction(action)) {
+      forms[index].onsubmit = ajaxSubmit;
+    }
+  }
+}
+
+function appendNextCards(html) {
+  // https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+  var holder = document.createElement("div");
+  var gallery = document.querySelector(".gallery");
+  var link = document.querySelector("[data-testid='gallery-next']");
+  var more = null;
+
+  // innerHTML parses the fragment string into element nodes.
+  // https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML
+  holder.innerHTML = html;
+
+  while (holder.children.length) {
+    var node = holder.children[0];
+
+    holder.removeChild(node);
+
+    var image = node.querySelector("img");
+    var next = node.getAttribute("data-testid") === "gallery-next" ? node : node.querySelector("[data-testid='gallery-next']");
+
+    // The pager link carries the next address. A card already shown is skipped.
+    if (next && !image) {
+      more = next;
+    } else if (image && !document.querySelector("img[src='" + image.getAttribute("src") + "']")) {
+      gallery.appendChild(node);
+    }
+  }
+
+  // No next link in the reply means this was the last page.
+  if (more) {
+    link.setAttribute("href", more.getAttribute("href"));
+  } else {
+    link.setAttribute("data-done", "1");
+    link.removeAttribute("href");
+    link.textContent = "No more pictures";
+  }
+
+  bindAjax();
+}
+
+function loadNext() {
+  var link = document.querySelector("[data-testid='gallery-next']");
+
+  // One request at a time, and none after the last page.
+  if (!link || link.getAttribute("data-loading") === "1" || link.getAttribute("data-done") === "1") {
+    return;
+  }
+
+  link.setAttribute("data-loading", "1");
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("GET", link.getAttribute("href") + "&fragment=1");
+  xhr.onload = function () {
+    appendNextCards(xhr.responseText);
+    link.removeAttribute("data-loading");
+  };
+  xhr.send();
+}
+
+function bindNext() {
+  var link = document.querySelector("[data-testid='gallery-next']");
+
+  if (!link) {
+    return;
+  }
+
+  link.onclick = function (event) {
+    event.preventDefault();
+    loadNext();
+
+    return false;
+  };
+}
+
+function bindScroll() {
+  window.onscroll = function () {
+    var atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 4;
+
+    if (atBottom) {
+      loadNext();
+    }
+  };
+}
+
+bindAjax();
+bindNext();
+bindScroll();
+</script>
+</body>
+</html>

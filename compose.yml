@@ -1,0 +1,37 @@
+# One app container and Mailpit. Mailpit is the mailbox, not a library the app imports.
+# https://docs.docker.com/compose/intro/compose-application-model/
+# https://docs.docker.com/compose/environment-variables/variable-interpolation/
+
+services:
+  app:
+    build: .
+    ports:
+      # Host 8080 to the process inside the container. The Dockerfile EXPOSE matches this.
+      - "8080:8080"
+    environment:
+      # Compose reads .env in this directory. No fallback: a secret written here would be in git.
+      # https://docs.docker.com/compose/environment-variables/variable-interpolation/
+      CAMAGRU_SECRET: ${CAMAGRU_SECRET:?set CAMAGRU_SECRET in .env}
+      CAMAGRU_BASE_URL: ${CAMAGRU_BASE_URL:-http://localhost:8080}
+      CAMAGRU_SMTP_HOST: mailpit
+      # 1025 is Mailpit's SMTP port. The app sends mail there. 8025 is only the web inbox.
+      CAMAGRU_SMTP_PORT: "1025"
+      CAMAGRU_BIND: 0.0.0.0
+      CAMAGRU_PORT: "8080"
+      DATABASE_PATH: /data/camagru.sqlite3
+    volumes:
+      # A named volume. Docker stores it, so there is no camagru-data folder in the repo.
+      # `docker volume ls` shows it. `make fclean` deletes it.
+      # https://docs.docker.com/engine/storage/volumes/
+      - camagru-data:/data
+    depends_on:
+      - mailpit
+
+  mailpit:
+    image: axllent/mailpit:v1.21
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+volumes:
+  camagru-data:

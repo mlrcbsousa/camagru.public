@@ -1,0 +1,11 @@
+<div class="account">
+  <h1>Sign up</h1>
+  <p class="lead">A username, an email, and a password with a letter and a digit. The confirmation link arrives by email.</p>
+  <form method="post" action="/signup" autocomplete="off">
+    <label>Username <input data-testid="signup-username" name="username" value="{{username}}" autocomplete="username"></label>
+    <label>Email <input data-testid="signup-email" name="email" value="{{email}}" autocomplete="email"></label>
+    <label>Password <input data-testid="signup-password" name="password" type="password" autocomplete="new-password"></label>
+    <button data-testid="signup-submit" type="submit">Sign up</button>
+  </form>
+  {{message}}
+</div>

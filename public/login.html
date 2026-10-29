@@ -1,0 +1,12 @@
+<div class="account">
+  <h1>Log in</h1>
+  <p class="lead">Use the username and password from the account you confirmed.</p>
+  {{notice}}
+  <form method="post" action="/login" autocomplete="off">
+    <label>Username <input data-testid="login-username" name="username" value="{{username}}" autocomplete="username"></label>
+    <label>Password <input data-testid="login-password" name="password" type="password" autocomplete="current-password"></label>
+    <button data-testid="login-submit" type="submit">Log in</button>
+  </form>
+  {{message}}
+  <p><a href="/reset">Forgot your password?</a></p>
+</div>

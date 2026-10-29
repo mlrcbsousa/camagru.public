@@ -4,13 +4,11 @@ Web app for webcam or uploaded photos with a server-side overlay. Subject v4.1. 
 
 ## Status
 
-The server is Python 3.15.0 with `sqlite3`, Pillow, and `smtplib`, installed by uv. It runs as one app container next to Mailpit, and `make up` starts both. Decisions are in [docs/adr/README.md](docs/adr/README.md), the screens in [docs/DESIGN.md](docs/DESIGN.md), and the behaviour in [docs/SPEC.md](docs/SPEC.md).
-
-The route map is [docs/security.md](docs/security.md).
+The server is Python 3.15.0 with `sqlite3`, Pillow, and `smtplib`, installed by uv. It runs as one app container next to Mailpit, and `make up` starts both. Decisions are in [docs/adr/README.md](docs/adr/README.md), documentation and others - e.g. security notes are in [docs/security.md](docs/security.md).
 
 ## AI usage
 
-An assistant helped document the modules in [docs/code](docs/code/01-main.md), explain concepts that were new in this stack, research the PHP standard-library equivalents in the table below, and write the end-to-end tests.
+An assistant helped document the modules in `docs/`, explain concepts that were new in this stack, research the PHP standard-library equivalents in the table below, and write the end-to-end tests.
 
 ## Function mapping
 
@@ -78,12 +76,3 @@ The subject forbids a library I did not write unless PHP's standard library can 
 
 `make up` builds the app image and starts it with Mailpit. The app is at <http://localhost:8080> and the mailbox at <http://localhost:8025>. Fill `CAMAGRU_SECRET` in `.env` before `make up`, because compose refuses to start without it. `CAMAGRU_BASE_URL` defaults to `http://localhost:8080`. See [CICD.md](CICD.md).
 
-## A machine that keeps the data
-
-No public host is chosen yet. When one is, these are the steps.
-
-1. Install Docker and clone this repo. A database file is not copied into the git tree.
-2. Write `.env`: `CAMAGRU_SECRET` is a long random string that stays out of git, and `CAMAGRU_BASE_URL` is the `https` origin users type. `DATABASE_PATH` is set in `compose.yml` to `/data/camagru.sqlite3`, so `.env` does not change it.
-3. Keep `/data` on a disk that outlives the container. `make up` already mounts the named volume `camagru-data` there, and a rebuild attaches the same volume again. To use a host directory instead, mount it on `/data` in `compose.yml`. `make fclean` deletes the named volume.
-4. For a public site, point `CAMAGRU_SMTP_HOST` and `CAMAGRU_SMTP_PORT` in `compose.yml` at a real SMTP server. Mailpit is only the mailbox for `make up`; the app itself just speaks SMTP.
-5. Run `make up` and open the base URL. `make db` prints each username with its stored hash, which is not the password. `make logs` stays empty apart from Mailpit starting, and `make down` stops the containers but keeps the database.

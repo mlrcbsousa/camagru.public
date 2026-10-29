@@ -79,7 +79,7 @@ test.describe('docs/01-accounts.md section 9', () => {
     await accounts.expectLoggedIn('evalada');
   });
 
-  test('8. after logout the editor sends you to login', async () => {
+  test('8. after logout the editor sends the visitor to login', async () => {
     await accounts.logoutFromHere();
     await page.goto('/editor');
     await expect(page).toHaveURL(/\/login$/);
@@ -150,7 +150,7 @@ test.describe('docs/01-accounts.md section 9', () => {
 });
 
 test.describe('docs/01-editor.md section 5', () => {
-  test('1. a logged-out editor sends you to login', async () => {
+  test('1. a logged-out editor sends the visitor to login', async () => {
     await page.goto('/editor');
     await expect(page).toHaveURL(/\/login$/);
   });

@@ -11,7 +11,7 @@ https://www.php.net/manual/en/function.hash-equals.php
 
 ## The rule
 
-The subject says a simple lowercase word is refused but does not define the rest, so the rule we defend is 8 to 128 characters, one ASCII letter, and one digit. The 128 cap stops a huge string from spending the hash budget.
+The subject says a simple lowercase word is refused but does not define the rest, so the rule I defend is 8 to 128 characters, one ASCII letter, and one digit. The 128 cap stops a huge string from spending the hash budget.
 
 ```python
 def password_codes(password: object) -> list[str]:
@@ -56,7 +56,7 @@ def hash_password(password: str) -> str:
 
 PBKDF2 runs SHA-256 over the password and the salt, then feeds the result back in, 600000 times. That count is the cost, and it is what keeps a stolen database from being guessed quickly. 600000 is the OWASP figure for PBKDF2-SHA256.
 
-`hex` turns the bytes into text, and the `$` is our separator, not part of either value, so the column looks like `salt_hex$hash_hex`.
+`hex` turns the bytes into text, and the `$` is the separator, not part of either value, so the column looks like `salt_hex$hash_hex`.
 
 https://docs.python.org/3/library/secrets.html#secrets.token_bytes
 https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac
@@ -116,4 +116,4 @@ The string `"sha256"` is not a secret, and hiding it would not help. Both calls 
 
 ## A leaked database
 
-The iterations re-hash the previous result that many times, so guessing one password from a stolen file costs 600000 hashes instead of one. A leak is still serious, because the slowdown is not encryption: anyone with the file can guess offline, with no rate limit from our server, until a weak password falls out. The salt sits in that file next to the hash and is not a secret; it only stops one guess from being reused on every user. `CAMAGRU_SECRET` is not in the database, so a stolen sqlite file does not reveal the key that signs cookies.
+The iterations re-hash the previous result that many times, so guessing one password from a stolen file costs 600000 hashes instead of one. A leak is still serious, because the slowdown is not encryption: anyone with the file can guess offline, with no rate limit from this server, until a weak password falls out. The salt sits in that file next to the hash and is not a secret; it only stops one guess from being reused on every user. `CAMAGRU_SECRET` is not in the database, so a stolen sqlite file does not reveal the key that signs cookies.

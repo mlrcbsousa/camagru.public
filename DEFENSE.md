@@ -1,6 +1,6 @@
 # Defense
 
-Notes drawn from [docs/adr/README.md](docs/adr/README.md). Do not publish this file.
+Notes drawn from [docs/adr/README.md](docs/adr/README.md). This file is not published.
 
 - The subject is v4.1. Save accepts 0, 1, or many overlays once a base image is loaded. [subject/0001](docs/adr/subject/0001-build-to-v4-1.md).
 - A Slack message is not a ruling. [sources/0001](docs/adr/sources/0001-slack-is-not-a-ruling.md).

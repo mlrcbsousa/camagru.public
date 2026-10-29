@@ -13,7 +13,7 @@ Printed page 8 keeps capture inactive until an overlay is selected. A base image
 
 ## Decision
 
-We will build to v4.1. Capture waits for an overlay, and Save accepts 0, 1, or many overlays once a base image is loaded.
+I will build to v4.1. Capture waits for an overlay, and Save accepts 0, 1, or many overlays once a base image is loaded.
 
 ## Consequences
 

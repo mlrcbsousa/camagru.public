@@ -11,7 +11,7 @@ v4.1 printed page 7 requires a confirmation link, a password-reset mail, and a c
 
 ## Decision
 
-We will send mail with `smtplib`. The README maps the send to PHP `mail` for the required behavior, and the SMTP conversation to socket writes.
+I will send mail with `smtplib`. The README maps the send to PHP `mail` for the required behavior, and the SMTP conversation to socket writes.
 
 ## Consequences
 

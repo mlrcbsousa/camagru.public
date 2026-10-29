@@ -273,13 +273,13 @@ def end_session(conn: sqlite3.Connection, user_id: int) -> None:
 
 Logout calls this, so the column becomes 2 while an old cookie still says 1. The signature is still valid, but the version check rejects it. A password change and a finished reset do the same bump.
 
-There is no table of issued cookies, because the cookie is the session. A copied cookie cannot be deleted from someone else's disk, but the row can change: the copy keeps a good signature, since we signed it when we issued it, and fails the version check because the row has moved on.
+There is no table of issued cookies, because the cookie is the session. A copied cookie cannot be deleted from someone else's disk, but the row can change: the copy keeps a good signature, since the server signed it when it issued it, and fails the version check because the row has moved on.
 
 ## The password on the wire
 
 DevTools shows `password=password1` because it is the browser, looking at the form body before TLS would hide it. `make up` serves `http://localhost`, so there is no TLS and the payload tab shows the bytes.
 
-The server has to receive the password, because it hashes what you typed and compares that to the stored hash; checking a password the server never sees would need a protocol this subject does not ask for. The rule is narrower: do not store it in the clear, do not put it in the cookie, and do not write it to a log. The form body is the only place it exists, and only for that request.
+The server has to receive the password, because it hashes the typed password and compares that to the stored hash; checking a password the server never sees would need a protocol this subject does not ask for. The rule is narrower: it is not stored in the clear, not put in the cookie, and not written to a log. The form body is the only place it exists, and only for that request.
 
 ## Salt, briefly
 
@@ -308,7 +308,7 @@ def _logout(
 
 ## CSRF
 
-Printed page 6 says an outside form must not change private data, and CSRF is that attack. You are logged in, and another site serves a form whose action is `http://localhost:8080/logout` and submits it. A browser that ignores `SameSite` would send your cookie with that post, and Firefox 41 and Chrome 46 are such browsers, so `SameSite=Lax` is not a protection the app can rely on.
+Printed page 6 says an outside form must not change private data, and CSRF is that attack. The member is logged in, and another site serves a form whose action is `http://localhost:8080/logout` and submits it. A browser that ignores `SameSite` would send that cookie with that post, and Firefox 41 and Chrome 46 are such browsers, so `SameSite=Lax` is not a protection the app can rely on.
 
 Every member form therefore carries a hidden field whose value is the HMAC of the user id and `session_version`, keyed by `CAMAGRU_SECRET`, and `csrf_accepts` recomputes it and compares. The other site can make the browser send the cookie, but it cannot invent the field without the secret. The same check guards logout, the profile save, the editor save, delete, like, and comment. Signup, login, and the reset request have no session, so there is no cookie for another site to ride. The comparison is in `session.py`.
 
@@ -426,7 +426,7 @@ def _profile(
 
 Without the CSRF field the post is refused with `the form was refused` and nothing is written, the same check as logout. The suite posts the profile form with the field set to `nope` and checks that the username did not change.
 
-`_profile_error` runs before the write. A bad username or email is one sentence, and a password that was filled in but fails the rules becomes the `Invalid password.` list, while a blank password skips that check. The username and email are refused when another row already has them; your own row is allowed, so saving without changing the name is fine. If the row disappears mid-request, `find_user_id` returns `None` and the `ValueError` becomes the 500 page from `application`.
+`_profile_error` runs before the write. A bad username or email is one sentence, and a password that was filled in but fails the rules becomes the `Invalid password.` list, while a blank password skips that check. The username and email are refused when another row already has them; the member's own row is allowed, so saving without changing the name is fine. If the row disappears mid-request, `find_user_id` returns `None` and the `ValueError` becomes the 500 page from `application`.
 
 ```python
 def update_profile(
@@ -464,13 +464,13 @@ def update_profile(
 
 A blank password keeps the stored hash and leaves `session_version` alone, so other sessions stay logged in. A new password stores a new hash and bumps the version, which logs out every other cookie, and the redirect sends this browser a new cookie built with the new version so this tab stays logged in. `None` from `update_profile` means the unique index caught a race the earlier check did not see, so the page says the name or email is taken and the row is unchanged.
 
-The version is the revocation stamp, and there is only one per user, so bumping it logs out every cookie, including the phone you forgot. A new password is the moment those other sessions should die, because they logged in with the secret you just replaced. A new username or email does not replace that secret, and the cookie identifies the user id rather than the spelling of the name, so those sessions are still the same person and a rename does not kick them out.
+The version is the revocation stamp, and there is only one per user, so bumping it logs out every cookie, including a phone left signed in. A new password is the moment those other sessions should die, because they logged in with the secret that was just replaced. A new username or email does not replace that secret, and the cookie identifies the user id rather than the spelling of the name, so those sessions are still the same person and a rename does not kick them out.
 
 The walkthrough step changes the username, email, and password, logs out, and logs in with the new ones. The same form has the comment-mail checkbox, which stores `mail_ok` as 1 when ticked and 0 when not, and the gallery reads that flag before it sends a comment letter.
 
 ## `_confirm`
 
-The link in the signup mail. It does not log you in: it marks the row confirmed and sends the browser to the login form.
+The link in the signup mail. It does not log the account in: it marks the row confirmed and sends the browser to the login form.
 
 ```python
 def _confirm(conn: sqlite3.Connection, path: str) -> Response:

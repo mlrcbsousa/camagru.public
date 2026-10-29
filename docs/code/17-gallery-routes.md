@@ -233,4 +233,4 @@ def _member_ok(user: SessionUser | None, csrf: str, secret: str) -> bool:
     return csrf_accepts(csrf, user["id"], user["session_version"], secret)
 ```
 
-This is the same token as the profile form ([03-session.md](03-session.md)). A form on another site cannot know it, so it cannot like or comment as you. What gets checked is the `csrf` field from the handler's allow-list, not the whole post.
+This is the same token as the profile form ([03-session.md](03-session.md)). A form on another site cannot know it, so it cannot like or comment as that member. What gets checked is the `csrf` field from the handler's allow-list, not the whole post.

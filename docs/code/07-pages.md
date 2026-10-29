@@ -16,7 +16,7 @@ def _fill(template: str, fields: dict[str, str]) -> str:
 
 `re.sub` calls `replacer` once per marker. `match.group(0)` is the whole marker, such as `{{username}}`, and `match.group(1)` is the name inside the parentheses, `username`. `fields.get(name, whole marker)` returns the value when that name was provided and the original `{{username}}` text when it was not, so an unknown marker stays visible instead of becoming the word `None`.
 
-Printed page 5 forbids a library we did not write unless a PHP standard-library equivalent exists. Jinja is that kind of library, and PHP has no template engine: it fills a string with `str_replace`, which is what `_fill` does ([manual](https://www.php.net/manual/en/function.str-replace.php)). Whatever is passed in for `{{username}}` must therefore already be escaped, or a name could become HTML.
+Printed page 5 forbids a library I did not write unless a PHP standard-library equivalent exists. Jinja is that kind of library, and PHP has no template engine: it fills a string with `str_replace`, which is what `_fill` does ([manual](https://www.php.net/manual/en/function.str-replace.php)). Whatever is passed in for `{{username}}` must therefore already be escaped, or a name could become HTML.
 
 ```python
 def escape(value: object) -> str:

@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.14] - 2026-10-29
+
+- The README says an assistant helped with the module notes, the PHP mapping, and the end-to-end tests, and the docs speak as the author or in the third person - 42S-30
+
 ## [0.0.13] - 2026-10-29
 
 - Save GIF snaps the live camera only, and a sample or an upload is refused - 42S-10

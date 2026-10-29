@@ -73,7 +73,7 @@ A GET draws the page, and the words on it come from the address: `?error=nobase`
 
 A POST never draws the page; every branch is a `303` to a GET address. That is what makes refresh safe, because the address bar then holds `/editor?notice=picture` and reloading it only reads.
 
-The CSRF token is the same check as on the profile form, see [03-session.md](03-session.md). A form on another site cannot know the token, so it cannot save into your account.
+The CSRF token is the same check as on the profile form, see [03-session.md](03-session.md). A form on another site cannot know the token, so it cannot save into the member's account.
 
 `gif=1` comes from the Save GIF button and goes to `_store_gif`, which turns three snaps into one GIF; the button side of that flow is in [23-preview.md](23-preview.md). Every other save goes through `_save_picture`, which returns `""` on success or a short code that goes into the address.
 
@@ -108,7 +108,7 @@ A capture or an upload arrives as base64 text in `upload_b64`, and it wins over 
 
 A data URL looks like `data:image/png;base64,iVBORw0...`, where the part before the comma is a label, so `split(",", 1)[1]` keeps only the encoded bytes. `validate=True` refuses characters that are not base64 instead of silently skipping them. A broken payload raises `binascii.Error`, and the function returns bytes that are not an image, so the next check refuses it with the same message as any other bad file.
 
-Printed page 8 asks for an upload as an alternative to the webcam but does not prescribe base64 or forbid a multipart body. Posting the file as text is our choice, written down as AC-10 in [SPEC.md](../SPEC.md). The comments on those lines link `b64decode` and `binascii.Error`.
+Printed page 8 asks for an upload as an alternative to the webcam but does not prescribe base64 or forbid a multipart body. Posting the file as text is my choice, written down as AC-10 in [SPEC.md](../SPEC.md). The comments on those lines link `b64decode` and `binascii.Error`.
 
 ## Building and storing
 

@@ -12,7 +12,7 @@ A printed page is the footer number in the subject.
 | Webcam preview, a list of superposable images, capture, thumbnails of earlier pictures, upload, and a server-side PNG. | Printed page 8, V.4 | The editor page. |
 | Capture stays inactive until a sticker is selected. | Printed page 8 | Section 3 |
 | A save needs a base image. Zero, one, or several stickers all save. | Printed page 8 does not forbid a zero-sticker upload. | AC-8, AC-9, AC-10 |
-| Logged-out `/editor` redirects to login. Delete only your own picture. | Printed page 8 | AC-7, AC-11 |
+| Logged-out `/editor` redirects to login. A member deletes only their own picture. | Printed page 8 | AC-7, AC-11 |
 | Header, main, and footer. Usable at phone width. No console or server log except `getUserMedia` on plain HTTP. | Printed page 5 | AC-17 |
 
 ## 2. Stickers
@@ -38,10 +38,10 @@ Leave the browser console and `make logs` open, and open the site as <http://loc
 `cd e2e && npm run walkthrough` runs these steps with Playwright, in this order, and fails on any console line. Its test names carry the step numbers below, so run it before the manual pass.
 
 1. While logged out, open `/editor`. Pass: the address becomes `/login`.
-2. Log in and open Editor. Pass: header, main, and footer are present, and the username sits next to Log out. The stage shows the camera after you allow it, Save and Capture are inactive, and Your pictures says there are none. No console line other than the camera warning, and `make logs` shows no request line.
+2. Log in and open Editor. Pass: header, main, and footer are present, and the username sits next to Log out. The stage shows the camera after it is allowed, Save and Capture are inactive, and Your pictures says there are none. No console line other than the camera warning, and `make logs` shows no request line.
 3. With the camera live, look at Capture with no sticker ticked, then tick Border. Pass: Capture is inactive, then active. Click it. Pass: the stage freezes, the button reads Retake, Save turns on, and the camera indicator on the tab goes off.
 4. Click Use sample photo with no sticker ticked. Pass: the camera indicator goes off. Save. Pass: the address is `/editor?notice=picture`, the page says Picture saved, and Your pictures shows one thumbnail. The camera comes back on, because the saved page loads fresh and every editor load starts the webcam preview, the main section on printed page 8.
-5. Refresh the page. Pass: still one thumbnail. Open `/editor` fresh. Pass: Save is inactive until you load a photo again.
+5. Refresh the page. Pass: still one thumbnail. Open `/editor` fresh. Pass: Save is inactive until a photo is loaded again.
 6. Use the sample photo, tick only Border, and Save. Pass: a second thumbnail with the border. Click it. Pass: the browser opens the stored PNG at `/pictures/<id>`, and the border is part of the image. Use the browser Back button to return. The live camera does not show the sticker before Save in the mandatory part; that is the bonus preview.
 7. Use the sample photo, tick Border and Star sticker, and Save. Pass: a third thumbnail with both. On a wide window, Your pictures ends level with the bottom of the workspace and scrolls on its own.
 8. Upload a PNG with no sticker and Save. Pass: a new thumbnail. Then repeat with camera access blocked from the address bar. Pass: the stage keeps the empty sentence, Capture stays inactive, and an upload or the sample still saves.
